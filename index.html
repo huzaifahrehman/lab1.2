@@ -1,0 +1,243 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CTF Final Challenge</title>
+
+<style>
+
+body{
+    background:#111;
+    color:#00ff88;
+    font-family:Consolas,monospace;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+
+.box{
+    width:500px;
+    padding:35px;
+    background:#181818;
+    border:2px solid #00ff88;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 0 20px #00ff88;
+}
+
+input{
+    width:90%;
+    padding:10px;
+    margin-top:15px;
+    background:#000;
+    color:#00ff88;
+    border:1px solid #00ff88;
+    outline:none;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 20px;
+    background:#00ff88;
+    color:#000;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#00cc66;
+}
+
+#error{
+    color:red;
+    margin-top:15px;
+    min-height:20px;
+}
+
+#flagSection{
+    display:none;
+}
+
+#win{
+    display:none;
+    margin-top:25px;
+    animation:fade 1s;
+}
+
+@keyframes fade{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+h1{
+    color:#00ff88;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>🏁 Final Challenge</h2>
+
+<p id="msg">
+Enter your name to continue.
+</p>
+
+<div id="nameSection">
+
+<input
+type="text"
+id="username"
+placeholder="Your Name">
+
+<br>
+
+<button onclick="nextStep()">
+Continue
+</button>
+
+</div>
+
+<div id="flagSection">
+
+<p id="welcome"></p>
+
+<input
+type="password"
+id="flag"
+placeholder="Enter Final Flag">
+
+<br>
+
+<button onclick="verifyFlag()">
+Verify Flag
+</button>
+
+<p id="error"></p>
+
+</div>
+
+<div id="win">
+
+<h1>🎉 YOU WIN! 🎉</h1>
+
+<p id="winnerName"></p>
+
+<p>
+Excellent work!
+</p>
+
+<p>
+You successfully completed every stage of the CTF.
+</p>
+
+<p>
+✅ Final Flag Verified
+</p>
+
+<h3>
+Thank You For Playing
+</h3>
+
+</div>
+
+</div>
+
+<script>
+
+// SHA-256 hash of:
+// CTF{github}
+
+const FLAG_HASH =
+"4f5d853715527d7e34d4aef0fa6a4a9459c3c9b2f5b858f5c8b3a2e63df879d2";
+
+let playerName="";
+
+async function sha256(message){
+
+const buffer=await crypto.subtle.digest(
+"SHA-256",
+new TextEncoder().encode(message)
+);
+
+return [...new Uint8Array(buffer)]
+.map(x=>x.toString(16).padStart(2,"0"))
+.join("");
+
+}
+
+function nextStep(){
+
+playerName=document.getElementById("username").value.trim();
+
+if(playerName===""){
+
+alert("Please enter your name.");
+
+return;
+
+}
+
+document.getElementById("nameSection").style.display="none";
+
+document.getElementById("msg").innerHTML="Final Verification";
+
+document.getElementById("welcome").innerHTML=
+"Welcome <b>"+playerName+"</b>.";
+
+document.getElementById("flagSection").style.display="block";
+
+}
+
+async function verifyFlag(){
+
+let flag=document.getElementById("flag").value;
+
+let hash=await sha256(flag);
+
+if(hash===FLAG_HASH){
+
+document.getElementById("flagSection").style.display="none";
+
+document.getElementById("msg").style.display="none";
+
+document.getElementById("winnerName").innerHTML=
+"Congratulations <b>"+playerName+"</b>!";
+
+document.getElementById("win").style.display="block";
+
+}else{
+
+document.getElementById("error").innerHTML=
+"Incorrect Flag.";
+
+}
+
+}
+
+</script>
+
+<!--
+
+Congratulations!
+
+You completed the challenge.
+
+Designed by:
+Your Name
+
+-->
+
+</body>
+</html>
+```
